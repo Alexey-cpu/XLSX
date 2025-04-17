@@ -182,7 +182,7 @@ bool XLSX::OpenXLSX::Worksheet::insertRows(int _From, int _Count)
     for(int i = 0, j = std::max<int>(m_Sheet.rowCount() + 1, 1); i < _Count ; i++, j++)
         m_Sheet.row(j).values();
 
-    return moveRows(rowCount() - _Count, _Count, _From + 1);
+    return moveRows(rowCount() - _Count, _Count, _From);
 }
 
 bool XLSX::OpenXLSX::Worksheet::insertColumns(int _From, int _Count)
@@ -319,7 +319,6 @@ bool XLSX::OpenXLSX::Worksheet::moveColumns(int _From, int _Count, int _To)
                 int source = j;
                 int target = j + 1;
 
-                // swap
                 for(int k = 0 ; k < m_Sheet.rowCount() ; k++)
                 {
                     auto a = m_Sheet.cell(k+1, source+1).value().getString();
@@ -340,7 +339,6 @@ bool XLSX::OpenXLSX::Worksheet::moveColumns(int _From, int _Count, int _To)
                 int source = j;
                 int target = j - 1;
 
-                // swap
                 for(int k = 0 ; k < m_Sheet.rowCount() ; k++)
                 {
                     auto a = m_Sheet.cell(k+1, source+1).value().getString();
