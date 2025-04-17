@@ -1,6 +1,6 @@
-[submodule "tools/xlnt"]
-	path = tools/xlnt
-	url = https://github.com/Alexey-cpu/xlnt.git
-[submodule "tools/OpenXLSX"]
-	path = tools/OpenXLSX
+[submodule "source/kernel/tools/OpenXLSX"]
+	path = source/kernel/tools/OpenXLSX
 	url = https://github.com/Alexey-cpu/OpenXLSX.git
+[submodule "source/kernel/tools/xlnt"]
+	path = source/kernel/tools/xlnt
+	url = https://github.com/Alexey-cpu/xlnt.git

@@ -1,48 +1,46 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(XLSX LANGUAGES CXX)
+project(XLSXView LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#==============================================================================================================
+# configure Qt
+#==============================================================================================================
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets PdfWidgets Concurrent)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets PdfWidgets Concurrent)
 
 #==============================================================================================================
 # include CMake macro
 #==============================================================================================================
 include("cmake/collect_source_code_and_resources.cmake")
-
-#==============================================================================================================
-# OpenXLSX
-#==============================================================================================================
-set(OPENXLSX_LIBRARY_TYPE "SHARED" CACHE STRING "Set the library type to SHARED or STATIC")
-set(OPENXLSX_ENABLE_LTO OFF CACHE BOOL "Enables LTO for OpenXLSX" FORCE)
-add_subdirectory("tools/OpenXLSX/OpenXLSX")
-
-#==============================================================================================================
-# xlnt-community
-#==============================================================================================================
-set(STATIC OFF CACHE BOOL "Build XLNT as SHARED library" FORCE)
-add_subdirectory("tools/xlnt/")
+add_subdirectory("source/")
 
 #==============================================================================================================
 # retrieve source code
 #==============================================================================================================
-list(APPEND PATHS "source/")
+list(APPEND PATHS "source/gui")
 cmake_language(CALL COLLECT_SOURCE_CODE_AND_RESOURCES PATHS)
 
 # create executable
-add_executable(XLSX ${SOURCES} ${HEADERS}
-    source/XLSX.h
+add_executable(XLSXView ${SOURCES} ${HEADERS})
+target_include_directories(XLSXView PUBLIC ${DIRECTORIES})
 
-    source/XLSX_OpenXLSX.h)
-
-target_link_libraries(XLSX
+target_link_libraries(
+    XLSXView
     PUBLIC
-    OpenXLSX::OpenXLSX
-    xlnt
+
+    #backend
+    XLSX::XLSX
+
+    #frontend
+    Qt::Core
+    Qt::Gui
+    Qt::Widgets
 )
 
 #find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)

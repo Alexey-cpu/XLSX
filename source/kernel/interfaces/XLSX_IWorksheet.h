@@ -1,37 +1,21 @@
-#ifndef XLSX_H
-#define XLSX_H
+#ifndef XLSX_IWORKSHEET_H
+#define XLSX_IWORKSHEET_H
+
+// custom
+#include <XLSX_ICell.h>
 
 // STL
-#include <string>
 #include <memory>
-#include <vector>
+#include <string>
 
-namespace XLSXCpp
+namespace XLSX
 {
-    // ICell
-    template<typename __type>
-    class ICell
-    {
-    public:
-
-        // constructors
-        ICell(){}
-
-        // virtual destructor
-        virtual ~ICell(){}
-
-        // getters
-        virtual __type getData(int _Row, int _Column, ICell<__type>* _Data = nullptr) const = 0;
-
-        // setters
-        virtual bool setData(int _Row, int _Column, __type _Value, ICell<__type>* _Data = nullptr) = 0;
-    };
-
-    // IWorksheet
     template<typename ... T>
     class IWorksheet
     {
     public:
+
+        typedef std::shared_ptr<IWorksheet<>> WorksheetPointer;
 
         // constructors
         IWorksheet(){}
@@ -121,9 +105,9 @@ namespace XLSXCpp
         }
 
         // static API
-        static std::unique_ptr<IWorksheet<>> empty()
+        static WorksheetPointer empty()
         {
-            return std::unique_ptr<IWorksheet<>>(new IWorksheet<>());
+            return WorksheetPointer(new IWorksheet<>());
         }
     };
 
@@ -142,53 +126,6 @@ namespace XLSXCpp
 
         _Worksheet m_Sheet;
     };
-
-    // IWorkbook
-    class IWorkbook
-    {
-    public:
-
-        typedef std::shared_ptr<IWorksheet<>> WorksheetPointer;
-
-        // constructors
-        IWorkbook(){}
-
-        // virtual destructor
-        virtual ~IWorkbook(){}
-
-        // interface
-        virtual WorksheetPointer findSheet(int _Index) const = 0;
-        virtual WorksheetPointer findSheet(std::string _Name) const = 0;
-        virtual WorksheetPointer addSheet(std::string _Name) const = 0;
-        virtual bool removeSheet(std::string) = 0;
-        virtual std::vector<WorksheetPointer> Sheets() const = 0;
-        virtual int sheetsCount() const = 0;
-        virtual bool insertSheets(int _From, int _Count) = 0;
-        virtual bool removeSheets(int _From, int _Count) = 0;
-    };
-
-    // IDocument
-    class IDocument
-    {
-    public:
-
-        typedef std::unique_ptr<IWorkbook> WorkbookPointer;
-
-        // constructors
-        IDocument(){}
-
-        // virtual destructor
-        virtual ~IDocument(){}
-
-        // interface
-        virtual bool open(const std::string& _Path) = 0;
-        virtual void close() = 0;
-        virtual bool save()  = 0;
-        virtual bool saveAs(const std::string& _Path) = 0;
-
-        // sheet functions
-        virtual WorkbookPointer WorkBook() const = 0;
-    };
 };
 
-#endif // XLSX_H
+#endif // XLSX_IWORKSHEET_H
