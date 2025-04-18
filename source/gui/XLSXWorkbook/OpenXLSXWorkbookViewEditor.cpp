@@ -149,7 +149,7 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
                     this,
                     "Warning",
                     QString("Are you sure you would like to remove sheet {%1} ?")
-                        .arg(model->listName(selection.first().row()))
+                    .arg(QString::fromStdString(model->WorkBook()->findSheet(selection.first().row())->getName()))
                     );
 
             if(answer == QMessageBox::StandardButton::Yes)
@@ -262,10 +262,10 @@ QWidget* OpenXLSXWorkbookViewEditor::CreateTable(const QModelIndex &index)
     if(model == nullptr)
         return nullptr;
 
-    QString name = m_List->model()->data(index).toString();
+    auto name = m_List->model()->data(index).toString().toStdString();
 
     OpenXLSXSheetViewEditor* editor =
-        new OpenXLSXSheetViewEditor(model->findSheet(name));
+        new OpenXLSXSheetViewEditor(model->WorkBook()->findSheet(name));
 
     return editor;
 }

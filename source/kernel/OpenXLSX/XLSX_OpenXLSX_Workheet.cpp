@@ -15,7 +15,7 @@ int XLSX::OpenXLSX::Worksheet::getIndex() const
     return m_Sheet.index();
 }
 
-std::string XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<std::string>* _Data) const
+std::string XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICellData<std::string>* _Data) const
 {
     typedef std::string __type;
 
@@ -29,7 +29,7 @@ std::string XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<std:
     }
 }
 
-double XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<double>* _Data) const
+double XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICellData<double>* _Data) const
 {
     typedef double __type;
 
@@ -43,7 +43,7 @@ double XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<double>* 
     }
 }
 
-float XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<float>* _Data) const
+float XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICellData<float>* _Data) const
 {
     typedef float __type;
 
@@ -57,7 +57,7 @@ float XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<float>* _D
     }
 }
 
-int XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICell<int>* _Data) const
+int XLSX::OpenXLSX::Worksheet::getData(int _Row, int _Column, ICellData<int>* _Data) const
 {
     typedef int __type;
 
@@ -99,7 +99,7 @@ bool XLSX::OpenXLSX::Worksheet::setIndex(int _Index)
     }
 }
 
-bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, std::string _Value, ICell<std::string>* _Data)
+bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, std::string _Value, ICellData<std::string>* _Data)
 {
     typedef std::string __type;
 
@@ -115,7 +115,7 @@ bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, std::string _Valu
     }
 }
 
-bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, double _Value, ICell<double>* _Data)
+bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, double _Value, ICellData<double>* _Data)
 {
     typedef double __type;
 
@@ -131,7 +131,7 @@ bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, double _Value, IC
     }
 }
 
-bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, float _Value, ICell<float>* _Data)
+bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, float _Value, ICellData<float>* _Data)
 {
     typedef float __type;
 
@@ -147,7 +147,7 @@ bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, float _Value, ICe
     }
 }
 
-bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, int _Value, ICell<int>* _Data)
+bool XLSX::OpenXLSX::Worksheet::setData(int _Row, int _Column, int _Value, ICellData<int>* _Data)
 {
     typedef int __type;
 

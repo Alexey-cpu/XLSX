@@ -14,10 +14,10 @@ namespace XLSX
         // Worksheet
         class Worksheet :
             public XLSX::IWorksheet<::OpenXLSX::XLWorksheet>,
-            public XLSX::ICell<std::string>,
-            public XLSX::ICell<double>,
-            public XLSX::ICell<float>,
-            public XLSX::ICell<int>
+            public XLSX::ICellData<std::string>,
+            public XLSX::ICellData<double>,
+            public XLSX::ICellData<float>,
+            public XLSX::ICellData<int>
         {
         public:
 
@@ -30,18 +30,18 @@ namespace XLSX
             // getters
             virtual std::string getName() const override;
             virtual int getIndex() const override;
-            virtual std::string getData(int _Row, int _Column, ICell<std::string>* _Data = nullptr) const override;
-            virtual double getData(int _Row, int _Column, ICell<double>* _Data = nullptr) const override;
-            virtual float getData(int _Row, int _Column, ICell<float>* _Data = nullptr) const override;
-            virtual int getData(int _Row, int _Column, ICell<int>* _Data = nullptr) const override;
+            virtual std::string getData(int _Row, int _Column, ICellData<std::string>* _Data = nullptr) const override;
+            virtual double getData(int _Row, int _Column, ICellData<double>* _Data = nullptr) const override;
+            virtual float getData(int _Row, int _Column, ICellData<float>* _Data = nullptr) const override;
+            virtual int getData(int _Row, int _Column, ICellData<int>* _Data = nullptr) const override;
 
             // setters
             virtual bool setName(std::string _Name) override;
             virtual bool setIndex(int _Index) override;
-            virtual bool setData(int _Row, int _Column, std::string _Value, ICell<std::string>* _Data = nullptr) override;
-            virtual bool setData(int _Row, int _Column, double _Value, ICell<double>* _Data = nullptr) override;
-            virtual bool setData(int _Row, int _Column, float _Value, ICell<float>* _Data = nullptr) override;
-            virtual bool setData(int _Row, int _Column, int _Value, ICell<int>* _Data = nullptr) override;
+            virtual bool setData(int _Row, int _Column, std::string _Value, ICellData<std::string>* _Data = nullptr) override;
+            virtual bool setData(int _Row, int _Column, double _Value, ICellData<double>* _Data = nullptr) override;
+            virtual bool setData(int _Row, int _Column, float _Value, ICellData<float>* _Data = nullptr) override;
+            virtual bool setData(int _Row, int _Column, int _Value, ICellData<int>* _Data = nullptr) override;
 
             // interface
             virtual int rowCount() override;

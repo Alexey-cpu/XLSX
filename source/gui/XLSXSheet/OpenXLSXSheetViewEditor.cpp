@@ -9,11 +9,38 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
     QWidget(_Parent)
 {
     // create table view
-    m_TableView = new QTableView(this);
+    m_TableView = new TableView(_Sheet, this);
+
+    /*
     m_TableView->setModel(new OpenXLSXSheetModel(_Sheet, m_TableView));
     m_TableView->resizeColumnsToContents();
     m_TableView->horizontalHeader()->setStretchLastSection(true);
     m_TableView->setEditTriggers(QTableView::DoubleClicked);
+
+    connect(
+        m_TableView,
+        &QTableView::pressed,
+        this,
+        [this](const QModelIndex &index)
+        {
+            m_CurrentCellData = index.data();
+        }
+    );
+
+    connect(
+        m_TableView,
+        &QTableView::entered,
+        this,
+        [this](const QModelIndex &index)
+        {
+            OpenXLSXSheetModel* model = this->findChild<OpenXLSXSheetModel*>();
+
+            if(model == nullptr)
+                return;
+
+            model->setData(index, m_CurrentCellData);
+        }
+    );
 
     connect(
         m_TableView->selectionModel(),
@@ -22,8 +49,10 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
         [this](const QItemSelection &selected, const QItemSelection &deselected)
         {
             m_LeadingColumn = -1;
+
+            qDebug() << "QItemSelectionModel::selectionChanged";
         }
-    );
+        );
 
     connect(
         m_TableView->horizontalHeader(),
@@ -31,9 +60,9 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
         this,
         [this](int logicalIndex)
         {
-            qDebug() << "QHeaderView::sectionClicked " << logicalIndex;
+            m_LeadingColumn = logicalIndex;
         }
-    );
+        );
 
     connect(
         m_TableView->horizontalHeader(),
@@ -51,22 +80,21 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
         this,
         [this](int logicalIndex, int oldSize, int newSize)
         {
-            qDebug() << "QHeaderView::sectionResized " << logicalIndex;
-
             if(m_LeadingColumn < 0)
                 m_LeadingColumn = logicalIndex;
 
-            auto selection = this->m_TableView->selectionModel()->selectedColumns();
+            auto selection = m_TableView->selectionModel()->selectedColumns();
 
             for(auto& sel : selection)
             {
                 m_TableView->horizontalHeader()->resizeSection(
                     sel.column(),
                     m_TableView->horizontalHeader()->sectionSize(m_LeadingColumn)
-                );
+                    );
             }
         }
-    );
+        );
+    */
 
     // create actions
     m_AddRowAction     = new QAction("AddRow", this );

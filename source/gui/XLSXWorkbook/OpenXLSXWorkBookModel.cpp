@@ -133,12 +133,12 @@ bool OpenXLSXWorkBookModel::save()
     return m_Documnet->save();
 }
 
-QString OpenXLSXWorkBookModel::listName(size_t _Index)
+void OpenXLSXWorkBookModel::close()
 {
-    return QString::fromStdString(m_Documnet->WorkBook()->findSheet(_Index)->getName());
+    m_Documnet->close();
 }
 
-XLSX::WorksheetPointer OpenXLSXWorkBookModel::findSheet(QString _Name)
+XLSX::WorkbookPointer OpenXLSXWorkBookModel::WorkBook()
 {
-    return m_Documnet->WorkBook()->findSheet(_Name.toStdString());
+    return m_Documnet->WorkBook();
 }

@@ -33,6 +33,16 @@ public:
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    void emitLayoutAboutToBeChanged()
+    {
+        emit layoutAboutToBeChanged();
+    }
+
+    void emitLayoutChanged()
+    {
+        emit layoutChanged();
+    }
+
 protected:
 
     XLSX::WorksheetPointer m_Sheet;

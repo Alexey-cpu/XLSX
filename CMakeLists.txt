@@ -42,14 +42,3 @@ target_link_libraries(
     Qt::Gui
     Qt::Widgets
 )
-
-#find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-#find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
-
-#target_link_libraries(XLSX Qt${QT_VERSION_MAJOR}::Core)
-
-#include(GNUInstallDirs)
-#install(TARGETS XLSX
-#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#)

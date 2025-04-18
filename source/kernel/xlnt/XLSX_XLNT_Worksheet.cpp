@@ -15,7 +15,7 @@ int XLSX::XLNT::Worksheet::getIndex() const
     return m_Sheet.workbook().index(m_Sheet);
 }
 
-std::string XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<std::string>* _Data) const
+std::string XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICellData<std::string>* _Data) const
 {
     typedef std::string __type;
 
@@ -29,7 +29,7 @@ std::string XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<std::str
     }
 }
 
-double XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<double>* _Data) const
+double XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICellData<double>* _Data) const
 {
     typedef double __type;
 
@@ -43,7 +43,7 @@ double XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<double>* _Dat
     }
 }
 
-float XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<float>* _Data) const
+float XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICellData<float>* _Data) const
 {
     typedef float __type;
 
@@ -57,7 +57,7 @@ float XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<float>* _Data)
     }
 }
 
-int XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICell<int>* _Data) const
+int XLSX::XLNT::Worksheet::getData(int _Row, int _Column, ICellData<int>* _Data) const
 {
     typedef int __type;
 
@@ -99,7 +99,7 @@ bool XLSX::XLNT::Worksheet::setIndex(int _Index)
     }
 }
 
-bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, std::string _Value, ICell<std::string>* _Data)
+bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, std::string _Value, ICellData<std::string>* _Data)
 {
     typedef std::string __type;
 
@@ -115,7 +115,7 @@ bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, std::string _Value, I
     }
 }
 
-bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, double _Value, ICell<double>* _Data)
+bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, double _Value, ICellData<double>* _Data)
 {
     typedef double __type;
 
@@ -131,7 +131,7 @@ bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, double _Value, ICell<
     }
 }
 
-bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, float _Value, ICell<float>* _Data)
+bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, float _Value, ICellData<float>* _Data)
 {
     typedef float __type;
 
@@ -147,7 +147,7 @@ bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, float _Value, ICell<f
     }
 }
 
-bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, int _Value, ICell<int>* _Data)
+bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, int _Value, ICellData<int>* _Data)
 {
     typedef int __type;
 

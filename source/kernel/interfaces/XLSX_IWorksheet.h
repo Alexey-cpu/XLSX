@@ -2,7 +2,7 @@
 #define XLSX_IWORKSHEET_H
 
 // custom
-#include <XLSX_ICell.h>
+#include <XLSX_ICellData.h>
 
 // STL
 #include <memory>
@@ -39,8 +39,8 @@ namespace XLSX
         template<typename __type>
         __type getData(int _Row, int _Column) const
         {
-            const ICell<__type>* getter =
-                dynamic_cast<const ICell<__type>*>(this);
+            const ICellData<__type>* getter =
+                dynamic_cast<const ICellData<__type>*>(this);
 
             return getter != nullptr ? getter->getData(_Row, _Column) : __type();
         }
@@ -59,8 +59,8 @@ namespace XLSX
         template<typename __type>
         bool setData(int _Row, int _Column, __type _Value)
         {
-            ICell<__type>* setter =
-                dynamic_cast<ICell<__type>*>(this);
+            ICellData<__type>* setter =
+                dynamic_cast<ICellData<__type>*>(this);
 
             return setter != nullptr && setter->setData(_Row, _Column, _Value);
         }
