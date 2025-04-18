@@ -175,6 +175,21 @@ int XLSX::XLNT::Worksheet::columnCount()
 
 bool XLSX::XLNT::Worksheet::insertRows(int _From, int _Count)
 {
+    if(m_Sheet.columns().length() <= 0)
+    {
+        try
+        {
+            m_Sheet.insert_columns(1, 1);
+
+            if(_Count <= 1)
+                return true;
+        }
+        catch(...)
+        {
+            return false;
+        }
+    }
+
     try
     {
         m_Sheet.insert_rows(_From + 1, _Count);
@@ -189,6 +204,21 @@ bool XLSX::XLNT::Worksheet::insertRows(int _From, int _Count)
 
 bool XLSX::XLNT::Worksheet::insertColumns(int _From, int _Count)
 {
+    if(rowCount() <= 0)
+    {
+        try
+        {
+            m_Sheet.insert_rows(1, _Count);
+
+            if(_Count <= 1)
+                return true;
+        }
+        catch(...)
+        {
+            return false;
+        }
+    }
+
     try
     {
         m_Sheet.insert_columns(_From + 1, _Count);

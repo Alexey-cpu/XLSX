@@ -11,91 +11,6 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
     // create table view
     m_TableView = new TableView(_Sheet, this);
 
-    /*
-    m_TableView->setModel(new OpenXLSXSheetModel(_Sheet, m_TableView));
-    m_TableView->resizeColumnsToContents();
-    m_TableView->horizontalHeader()->setStretchLastSection(true);
-    m_TableView->setEditTriggers(QTableView::DoubleClicked);
-
-    connect(
-        m_TableView,
-        &QTableView::pressed,
-        this,
-        [this](const QModelIndex &index)
-        {
-            m_CurrentCellData = index.data();
-        }
-    );
-
-    connect(
-        m_TableView,
-        &QTableView::entered,
-        this,
-        [this](const QModelIndex &index)
-        {
-            OpenXLSXSheetModel* model = this->findChild<OpenXLSXSheetModel*>();
-
-            if(model == nullptr)
-                return;
-
-            model->setData(index, m_CurrentCellData);
-        }
-    );
-
-    connect(
-        m_TableView->selectionModel(),
-        &QItemSelectionModel::selectionChanged,
-        this,
-        [this](const QItemSelection &selected, const QItemSelection &deselected)
-        {
-            m_LeadingColumn = -1;
-
-            qDebug() << "QItemSelectionModel::selectionChanged";
-        }
-        );
-
-    connect(
-        m_TableView->horizontalHeader(),
-        &QHeaderView::sectionClicked,
-        this,
-        [this](int logicalIndex)
-        {
-            m_LeadingColumn = logicalIndex;
-        }
-        );
-
-    connect(
-        m_TableView->horizontalHeader(),
-        &QHeaderView::sectionEntered,
-        this,
-        [this](int logicalIndex)
-        {
-            m_LeadingColumn = logicalIndex;
-        }
-        );
-
-    connect(
-        m_TableView->horizontalHeader(),
-        &QHeaderView::sectionResized,
-        this,
-        [this](int logicalIndex, int oldSize, int newSize)
-        {
-            if(m_LeadingColumn < 0)
-                m_LeadingColumn = logicalIndex;
-
-            auto selection = m_TableView->selectionModel()->selectedColumns();
-
-            for(auto& sel : selection)
-            {
-                m_TableView->horizontalHeader()->resizeSection(
-                    sel.column(),
-                    m_TableView->horizontalHeader()->sectionSize(m_LeadingColumn)
-                    );
-            }
-        }
-        );
-    */
-
     // create actions
     m_AddRowAction     = new QAction("AddRow", this );
     m_AddColumnAction  = new QAction("AddColumn", this );
@@ -189,7 +104,7 @@ void OpenXLSXSheetViewEditor::OnAddRowAction(bool)
 
     auto selection = m_TableView->selectionModel()->selectedIndexes();
 
-    model->insertRows(selection.empty() ? std::max(model->rowCount() - 1, 0) : selection.first().row(), 1);
+    model->insertRows((selection.empty() ? std::max(model->rowCount() - 1, 0) : selection.first().row()), 1);
 }
 
 void OpenXLSXSheetViewEditor::OnAddColumnAction(bool)
@@ -205,11 +120,7 @@ void OpenXLSXSheetViewEditor::OnAddColumnAction(bool)
     auto selection =
         m_TableView->selectionModel()->selectedIndexes();
 
-    if(model->insertColumns(
-            selection.empty() ? std::max(model->columnCount() - 1, 0) : selection.first().column(),
-            1
-            )
-        )
+    if(model->insertColumns(selection.empty() ? std::max(model->columnCount() - 1, 0) : selection.first().column(), 1))
     {
         // TODO: when filters pane is added here, we need to update filters
     }

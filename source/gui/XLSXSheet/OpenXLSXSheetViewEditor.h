@@ -37,24 +37,7 @@ public:
             this,
             [this](const QModelIndex &index)
             {
-                m_CurrentCellData = index.data();
-            }
-            );
-
-        connect(
-            this,
-            &QTableView::entered,
-            this,
-            [this](const QModelIndex &index)
-            {
-                /*
-                OpenXLSXSheetModel* model = this->findChild<OpenXLSXSheetModel*>();
-
-                if(model == nullptr)
-                    return;
-
-                model->setData(index, m_CurrentCellData);
-                */
+                m_ReferenceCellData = index.data();
             }
             );
 
@@ -64,11 +47,9 @@ public:
             this,
             [this](const QItemSelection &selected, const QItemSelection &deselected)
             {
-                m_LeadingColumn = -1;
-
-                qDebug() << "QItemSelectionModel::selectionChanged";
+                m_ReferenceColumn = -1;
             }
-            );
+        );
 
         connect(
             horizontalHeader(),
@@ -76,7 +57,7 @@ public:
             this,
             [this](int logicalIndex)
             {
-                m_LeadingColumn = logicalIndex;
+                m_ReferenceColumn = logicalIndex;
             }
             );
 
@@ -86,7 +67,7 @@ public:
             this,
             [this](int logicalIndex)
             {
-                m_LeadingColumn = logicalIndex;
+                m_ReferenceColumn = logicalIndex;
             }
             );
 
@@ -96,8 +77,8 @@ public:
             this,
             [this](int logicalIndex, int oldSize, int newSize)
             {
-                if(m_LeadingColumn < 0)
-                    m_LeadingColumn = logicalIndex;
+                if(m_ReferenceColumn < 0)
+                    m_ReferenceColumn = logicalIndex;
 
                 auto selection = selectionModel()->selectedColumns();
 
@@ -105,7 +86,7 @@ public:
                 {
                     horizontalHeader()->resizeSection(
                         sel.column(),
-                        horizontalHeader()->sectionSize(m_LeadingColumn)
+                        horizontalHeader()->sectionSize(m_ReferenceColumn)
                         );
                 }
             }
@@ -130,9 +111,7 @@ public:
             auto selection = selectionModel()->selectedIndexes();
 
             for(auto& index : selection)
-            {
-                model->setData(index, m_CurrentCellData);
-            }
+                model->setData(index, m_ReferenceCellData);
 
             model->emitLayoutChanged();
         }
@@ -142,8 +121,9 @@ public:
 
 protected:
 
-    int m_LeadingColumn = -1;
-    QVariant m_CurrentCellData;
+    int m_ReferenceColumn = -1;
+
+    QVariant m_ReferenceCellData;
 };
 
 // OpenXLSXSheetViewEditor

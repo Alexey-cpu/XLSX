@@ -178,6 +178,19 @@ bool XLSX::OpenXLSX::Worksheet::insertRows(int _From, int _Count)
     (void)_Count;
     (void)_From;
 
+    // insert a single column
+    if(columnCount() <= 0)
+    {
+        int start = m_Sheet.columnCount();
+        int end   = start + 1;
+
+        for(int j = start; j < end; j++)
+            m_Sheet.cell(1, j+1).value() = std::string();
+
+        if(_Count <= 1)
+            return true;
+    }
+
     // append rows at the end
     for(int i = 0, j = std::max<int>(m_Sheet.rowCount() + 1, 1); i < _Count ; i++, j++)
         m_Sheet.row(j).values();
@@ -189,6 +202,16 @@ bool XLSX::OpenXLSX::Worksheet::insertColumns(int _From, int _Count)
 {
     (void)_Count;
     (void)_From;
+
+    // insert a single row
+    if(columnCount() <= 0)
+    {
+        for(int i = 0, j = std::max<int>(m_Sheet.rowCount() + 1, 1); i < _Count ; i++, j++)
+            m_Sheet.row(j).values();
+
+        if(_Count <= 1)
+            return true;
+    }
 
     int start = m_Sheet.columnCount();
     int end   = start + _Count;
