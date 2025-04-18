@@ -10,12 +10,14 @@
 
 namespace XLSX
 {
+    template<typename ... T> class IWorksheet;
+
+    typedef std::shared_ptr<IWorksheet<>> WorksheetPointer;
+
     template<typename ... T>
     class IWorksheet
     {
     public:
-
-        typedef std::shared_ptr<IWorksheet<>> WorksheetPointer;
 
         // constructors
         IWorksheet(){}
@@ -102,6 +104,26 @@ namespace XLSX
         virtual bool moveColumns(int _From, int _Count, int _To)
         {
             return false;
+        }
+
+        std::string verticalHeader(int _Index) const
+        {
+            return std::to_string(_Index + 1);
+        }
+
+        std::string horizontalHeader(int _Index) const
+        {
+            ++_Index;
+            std::string name;
+
+            while (_Index > 0)
+            {
+                _Index--;
+                name = (char)('A' + _Index%26) + name;
+                _Index /= 26;
+            }
+
+            return name;
         }
 
         // static API

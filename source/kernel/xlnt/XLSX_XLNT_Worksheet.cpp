@@ -89,9 +89,7 @@ bool XLSX::XLNT::Worksheet::setIndex(int _Index)
 {
     try
     {
-        auto sheet = m_Sheet.workbook().sheet_by_index(_Index);
-
-        std::swap(sheet, m_Sheet);
+        m_Sheet.workbook().index(m_Sheet, _Index);
 
         return true;
     }
@@ -167,12 +165,12 @@ bool XLSX::XLNT::Worksheet::setData(int _Row, int _Column, int _Value, ICell<int
 
 int XLSX::XLNT::Worksheet::rowCount()
 {
-    return m_Sheet.rows().length();
+    return m_Sheet.rows(false).length();
 }
 
 int XLSX::XLNT::Worksheet::columnCount()
 {
-    return m_Sheet.columns().length();
+    return m_Sheet.columns(false).length();
 }
 
 bool XLSX::XLNT::Worksheet::insertRows(int _From, int _Count)

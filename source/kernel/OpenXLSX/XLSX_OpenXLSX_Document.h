@@ -29,7 +29,7 @@ namespace XLSX
             virtual void close() override;
             virtual bool save() override;
             virtual bool saveAs(const std::string& _Path) override;
-            virtual XLSX::IWorkbook::WorkbookPointer WorkBook() override;
+            virtual XLSX::WorkbookPointer WorkBook() override;
 
         protected:
 

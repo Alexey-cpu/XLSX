@@ -77,7 +77,7 @@ bool XLSX::OpenXLSX::Document::saveAs(const std::string& _Path)
     return true;
 }
 
-XLSX::IWorkbook::WorkbookPointer XLSX::OpenXLSX::Document::WorkBook()
+XLSX::WorkbookPointer XLSX::OpenXLSX::Document::WorkBook()
 {
-    return XLSX::IWorkbook::WorkbookPointer(new Workbook(m_Document));
+    return XLSX::WorkbookPointer(new Workbook(m_Document));
 }

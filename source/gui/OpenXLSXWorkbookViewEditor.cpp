@@ -149,7 +149,7 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
                     this,
                     "Warning",
                     QString("Are you sure you would like to remove sheet {%1} ?")
-                        .arg(QString::fromStdString(model->Doc()->WorkBook()->findSheet(selection.first().row() + 1)->getName()))
+                        .arg(model->listName(selection.first().row()))
                     );
 
             if(answer == QMessageBox::StandardButton::Yes)
@@ -171,7 +171,7 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
                 this->findChild<OpenXLSXWorkBookModel*>();
 
             if(model != nullptr)
-                model->Doc()->save();
+                model->save();
         }
         );
 
@@ -190,7 +190,7 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
 
             QString path = QFileDialog::getSaveFileName(this);
 
-            model->Doc()->saveAs(path.toStdString());
+            model->saveAs(QFileInfo(path));
         }
         );
 
@@ -220,15 +220,15 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
 
     // add actions to tool bar
     QToolBar* toolBar = new QToolBar(this);
+    toolBar->addAction(m_OpenAction);
+    toolBar->addAction(m_SaveAction);
+    toolBar->addAction(m_SaveAsAction);
+    toolBar->addSeparator();
     toolBar->addAction(m_AddRowAction);
     toolBar->addAction(m_RemoveRowAction);
     toolBar->addSeparator();
     toolBar->addAction(m_MoveUpAction);
     toolBar->addAction(m_MoveDownAction);
-    toolBar->addSeparator();
-    toolBar->addAction(m_SaveAction);
-    toolBar->addAction(m_SaveAsAction);
-    toolBar->addAction(m_OpenAction);
 
     // create object names for some QActions widgets
     toolBar->widgetForAction(m_AddRowAction)->setObjectName("ActionAddRow");
@@ -240,12 +240,12 @@ OpenXLSXWorkbookViewEditor::OpenXLSXWorkbookViewEditor(
     toolBar->widgetForAction(m_OpenAction)->setObjectName("ActionOpen");
 
     // create splitter
-    QSplitter* splitter = new QSplitter( this );
+    QSplitter* splitter = new QSplitter(this);
     splitter->addWidget(m_List);
 
     // layouting
     QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget( toolBar );
+    layout->addWidget(toolBar);
     layout->addWidget(splitter);
 
     // open file
@@ -262,10 +262,10 @@ QWidget* OpenXLSXWorkbookViewEditor::CreateTable(const QModelIndex &index)
     if(model == nullptr)
         return nullptr;
 
-    std::string name = m_List->model()->data(index).toString().toStdString();
+    QString name = m_List->model()->data(index).toString();
 
     OpenXLSXSheetViewEditor* editor =
-        new OpenXLSXSheetViewEditor(model->Doc()->WorkBook()->findSheet(name));
+        new OpenXLSXSheetViewEditor(model->findSheet(name));
 
     return editor;
 }

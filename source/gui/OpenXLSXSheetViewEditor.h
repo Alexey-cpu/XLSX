@@ -24,13 +24,11 @@ public:
 
     // constructors
     OpenXLSXSheetViewEditor(
-        XLSX::IWorksheet<>::WorksheetPointer _Sheet,
+        XLSX::WorksheetPointer _Sheet,
         QWidget* _Parent = nullptr );
 
     // virtual destructor
     virtual ~OpenXLSXSheetViewEditor();
-
-    int GetHeaderDataOffset() const;
 
 protected:
 
@@ -46,7 +44,7 @@ protected:
     QAction* m_MoveLeftAction   = nullptr;
     QAction* m_MoveRightAction  = nullptr;
 
-    const int m_HeaderDataOffset = 2;
+    int m_LeadingColumn;
 
     // service methods
     void OnAddRowAction(bool);

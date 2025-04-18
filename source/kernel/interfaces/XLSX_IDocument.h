@@ -22,7 +22,7 @@ namespace XLSX
         virtual bool saveAs(const std::string& _Path) = 0;
 
         // sheet functions
-        virtual IWorkbook::WorkbookPointer WorkBook() = 0;
+        virtual WorkbookPointer WorkBook() = 0;
     };
 };
 

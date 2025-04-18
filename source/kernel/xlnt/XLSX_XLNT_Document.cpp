@@ -25,6 +25,7 @@ bool XLSX::XLNT::Document::open(const std::string& _Path)
 {
     try
     {
+        m_Path = _Path;
         m_Document.load(_Path);
     }
     catch(...)
@@ -76,7 +77,7 @@ bool XLSX::XLNT::Document::saveAs(const std::string& _Path)
     return true;
 }
 
-XLSX::IWorkbook::WorkbookPointer XLSX::XLNT::Document::WorkBook()
+XLSX::WorkbookPointer XLSX::XLNT::Document::WorkBook()
 {
-    return XLSX::IWorkbook::WorkbookPointer(new Workbook(m_Document));
+    return XLSX::WorkbookPointer(new Workbook(m_Document));
 }

@@ -9,12 +9,12 @@ XLSX::XLNT::Workbook::Workbook(xlnt::workbook& _Document) :
 
 XLSX::XLNT::Workbook::~Workbook(){}
 
-XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::findSheet(int _Index) const
+XLSX::WorksheetPointer XLSX::XLNT::Workbook::findSheet(int _Index) const
 {
     try
     {
         auto sheet = m_Document.sheet_by_index(_Index);
-        return XLSX::IWorksheet<>::WorksheetPointer(new Worksheet(sheet));
+        return XLSX::WorksheetPointer(new Worksheet(sheet));
     }
     catch (...)
     {
@@ -22,12 +22,12 @@ XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::findSheet(int _Index)
     }
 }
 
-XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::findSheet(std::string _Name) const
+XLSX::WorksheetPointer XLSX::XLNT::Workbook::findSheet(std::string _Name) const
 {
     try
     {
         auto sheet = m_Document.sheet_by_title(_Name);
-        return XLSX::IWorksheet<>::WorksheetPointer(new Worksheet(sheet));
+        return XLSX::WorksheetPointer(new Worksheet(sheet));
     }
     catch (...)
     {
@@ -35,13 +35,13 @@ XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::findSheet(std::string
     }
 }
 
-XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::addSheet(std::string _Name) const
+XLSX::WorksheetPointer XLSX::XLNT::Workbook::addSheet(std::string _Name) const
 {
     // retrieve existing sheet
     try
     {
         auto sheet = m_Document.sheet_by_title(_Name);
-        return XLSX::IWorksheet<>::WorksheetPointer(new Worksheet(sheet));
+        return XLSX::WorksheetPointer(new Worksheet(sheet));
     }
     catch(...)
     {
@@ -52,7 +52,7 @@ XLSX::IWorksheet<>::WorksheetPointer XLSX::XLNT::Workbook::addSheet(std::string 
     {
         auto sheet = m_Document.create_sheet();
         sheet.title(_Name);
-        return XLSX::IWorksheet<>::WorksheetPointer(new Worksheet(sheet));
+        return XLSX::WorksheetPointer(new Worksheet(sheet));
     }
     catch (...)
     {
@@ -74,9 +74,9 @@ bool XLSX::XLNT::Workbook::removeSheet(std::string _Name)
     }
 }
 
-std::vector<XLSX::IWorksheet<>::WorksheetPointer> XLSX::XLNT::Workbook::Sheets() const
+std::vector<XLSX::WorksheetPointer> XLSX::XLNT::Workbook::Sheets() const
 {
-    std::vector<XLSX::IWorksheet<>::WorksheetPointer> sheets;
+    std::vector<XLSX::WorksheetPointer> sheets;
 
     for(int i = 0; i < m_Document.sheet_count(); i++)
         sheets.push_back(findSheet(i));
@@ -91,12 +91,10 @@ int XLSX::XLNT::Workbook::sheetsCount() const
 
 bool XLSX::XLNT::Workbook::insertSheets(int _From, int _Count)
 {
-    m_Document.create_sheet();
-
-    for(int i = _From; i < _From + _Count; i++)
+    for(int i = 0; i < _Count; i++)
         m_Document.create_sheet(i);
 
-    return false;
+    return true;
 }
 
 bool XLSX::XLNT::Workbook::removeSheets(int _From, int _Count)

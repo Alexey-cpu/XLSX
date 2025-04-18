@@ -14,7 +14,7 @@ class OpenXLSXSheetModel : public QAbstractTableModel
 public:
 
     // constructors
-    OpenXLSXSheetModel(XLSX::IWorksheet<>::WorksheetPointer _Sheet, QObject* _Parent = nullptr);
+    OpenXLSXSheetModel(XLSX::WorksheetPointer _Sheet, QObject* _Parent = nullptr);
 
     // vrtual destructor
     virtual ~OpenXLSXSheetModel();
@@ -35,7 +35,7 @@ public:
 
 protected:
 
-    XLSX::IWorksheet<>::WorksheetPointer m_Sheet;
+    XLSX::WorksheetPointer m_Sheet;
 };
 
 #endif // OPENXLSXSHEETMODEL_H

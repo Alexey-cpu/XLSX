@@ -1,6 +1,6 @@
 #include "OpenXLSXSheetModel.h"
 
-OpenXLSXSheetModel::OpenXLSXSheetModel(XLSX::IWorksheet<>::WorksheetPointer _Sheet, QObject* _Parent) :
+OpenXLSXSheetModel::OpenXLSXSheetModel(XLSX::WorksheetPointer _Sheet, QObject* _Parent) :
     QAbstractTableModel(_Parent),
     m_Sheet(_Sheet)
 {
@@ -62,10 +62,10 @@ QVariant OpenXLSXSheetModel::headerData(int section, Qt::Orientation orientation
         return QAbstractTableModel::headerData(section, orientation, role);
 
     if(orientation == Qt::Orientation::Vertical && section < rowCount())
-        return section + 1;
+        return QString::fromStdString(m_Sheet->verticalHeader(section));
 
-    //if(orientation == Qt::Orientation::Horizontal && section < columnCount())
-    //    return QString::fromStdString(m_Sheet.cell(1, section + 1).getString());
+    if(orientation == Qt::Orientation::Horizontal && section < columnCount())
+        return QString::fromStdString(m_Sheet->horizontalHeader(section));
 
     return QAbstractTableModel::headerData(section, orientation, role);
 }
@@ -96,11 +96,11 @@ int OpenXLSXSheetModel::columnCount(const QModelIndex&) const
 
 bool OpenXLSXSheetModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    // tweak starting row
+    emit layoutAboutToBeChanged();
+
     if(row > rowCount())
         row = rowCount();
 
-    // append rows to the end
     beginInsertRows(parent, rowCount(), rowCount() + count);
 
     if(!m_Sheet->insertRows(row, count))
@@ -115,7 +115,8 @@ bool OpenXLSXSheetModel::insertRows(int row, int count, const QModelIndex &paren
 
 bool OpenXLSXSheetModel::insertColumns(int column, int count, const QModelIndex &parent)
 {
-    // tweak starting column
+    emit layoutAboutToBeChanged();
+
     if(column > columnCount())
         column = columnCount();
 
@@ -127,6 +128,8 @@ bool OpenXLSXSheetModel::insertColumns(int column, int count, const QModelIndex 
 
     endInsertColumns();
 
+    emit layoutChanged();
+
     return true;
 }
 
@@ -134,6 +137,8 @@ bool OpenXLSXSheetModel::moveRows(const QModelIndex &sourceParent, int from, int
 {
     if(to < 0 || from < 0 || to >= rowCount() || from >= rowCount())
         return false;
+
+    emit layoutAboutToBeChanged();
 
     if (from + 1 == to)
         std::swap(from, to);
@@ -147,6 +152,8 @@ bool OpenXLSXSheetModel::moveRows(const QModelIndex &sourceParent, int from, int
 
     endMoveRows();
 
+    emit layoutChanged();
+
     return true;
 }
 
@@ -154,6 +161,8 @@ bool OpenXLSXSheetModel::moveColumns(const QModelIndex &sourceParent, int from, 
 {
     if(to < 0 || from < 0 || to >= columnCount() || from >= columnCount())
         return false;
+
+    emit layoutAboutToBeChanged();
 
     if(from + 1 == to)
         std::swap(from, to);
@@ -165,6 +174,8 @@ bool OpenXLSXSheetModel::moveColumns(const QModelIndex &sourceParent, int from, 
         return false;
 
     endMoveColumns();
+
+    emit layoutChanged();
 
     return true;
 }

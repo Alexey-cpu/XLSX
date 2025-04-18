@@ -22,11 +22,11 @@ namespace XLSX
             virtual ~Workbook();
 
             // sheet functions
-            virtual XLSX::IWorksheet<>::WorksheetPointer findSheet(int _Index) const override;
-            virtual XLSX::IWorksheet<>::WorksheetPointer findSheet(std::string _Name) const override;
-            virtual XLSX::IWorksheet<>::WorksheetPointer addSheet(std::string _Name) const override;
+            virtual WorksheetPointer findSheet(int _Index) const override;
+            virtual WorksheetPointer findSheet(std::string _Name) const override;
+            virtual WorksheetPointer addSheet(std::string _Name) const override;
             virtual bool removeSheet(std::string _Name) override;
-            virtual std::vector<XLSX::IWorksheet<>::WorksheetPointer> Sheets() const override;
+            virtual std::vector<XLSX::WorksheetPointer> Sheets() const override;
             virtual int sheetsCount() const override;
             virtual bool insertSheets(int _From, int _Count) override;
             virtual bool removeSheets(int _From, int _Count) override;

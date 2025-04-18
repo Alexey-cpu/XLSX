@@ -4,7 +4,7 @@
 
 // OpenXLSXSheetViewEditor
 OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
-    XLSX::IWorksheet<>::WorksheetPointer _Sheet,
+    XLSX::WorksheetPointer _Sheet,
     QWidget* _Parent) :
     QWidget(_Parent)
 {
@@ -14,6 +14,59 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
     m_TableView->resizeColumnsToContents();
     m_TableView->horizontalHeader()->setStretchLastSection(true);
     m_TableView->setEditTriggers(QTableView::DoubleClicked);
+
+    connect(
+        m_TableView->selectionModel(),
+        &QItemSelectionModel::selectionChanged,
+        this,
+        [this](const QItemSelection &selected, const QItemSelection &deselected)
+        {
+            m_LeadingColumn = -1;
+        }
+    );
+
+    connect(
+        m_TableView->horizontalHeader(),
+        &QHeaderView::sectionClicked,
+        this,
+        [this](int logicalIndex)
+        {
+            qDebug() << "QHeaderView::sectionClicked " << logicalIndex;
+        }
+    );
+
+    connect(
+        m_TableView->horizontalHeader(),
+        &QHeaderView::sectionEntered,
+        this,
+        [this](int logicalIndex)
+        {
+            m_LeadingColumn = logicalIndex;
+        }
+        );
+
+    connect(
+        m_TableView->horizontalHeader(),
+        &QHeaderView::sectionResized,
+        this,
+        [this](int logicalIndex, int oldSize, int newSize)
+        {
+            qDebug() << "QHeaderView::sectionResized " << logicalIndex;
+
+            if(m_LeadingColumn < 0)
+                m_LeadingColumn = logicalIndex;
+
+            auto selection = this->m_TableView->selectionModel()->selectedColumns();
+
+            for(auto& sel : selection)
+            {
+                m_TableView->horizontalHeader()->resizeSection(
+                    sel.column(),
+                    m_TableView->horizontalHeader()->sectionSize(m_LeadingColumn)
+                );
+            }
+        }
+    );
 
     // create actions
     m_AddRowAction     = new QAction("AddRow", this );
@@ -95,11 +148,6 @@ OpenXLSXSheetViewEditor::OpenXLSXSheetViewEditor(
 }
 
 OpenXLSXSheetViewEditor::~OpenXLSXSheetViewEditor(){}
-
-int OpenXLSXSheetViewEditor::GetHeaderDataOffset() const
-{
-    return m_HeaderDataOffset;
-}
 
 void OpenXLSXSheetViewEditor::OnAddRowAction(bool)
 {
