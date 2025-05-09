@@ -6,10 +6,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  BUILD_DIRECTORY: ${{ github.workspace }}/build
-  DIST_DIRECTORY: ${{ github.workspace }}/dist"
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -130,26 +126,82 @@ jobs:
     - name: Setup Ninja
       uses: seanmiddleditch/gha-setup-ninja@v5
 
-    # Build project using CMake
-    - name: Build Project
+    # Build project using CMake on Linux
+    - name: Build Project on Linux
+      if: matrix.os == 'ubuntu-latest'
       uses: threeal/cmake-action@v2.1.0
       with:
         generator: Ninja
         cxx-compiler: ${{ matrix.cpp_compiler }}
         c-compiler: ${{ matrix.c_compiler }}
-        args: -DCMAKE_INSTALL_PREFIX=$DIST_DIRECTORY
+        args: -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist
+        run-build: true
+        
+    # Build project using CMake on MacOS
+    - name: Build Project on MacOS
+      if: matrix.os == 'macOS-latest'
+      uses: threeal/cmake-action@v2.1.0
+      with:
+        generator: Ninja
+        cxx-compiler: ${{ matrix.cpp_compiler }}
+        c-compiler: ${{ matrix.c_compiler }}
+        args: -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist
+        run-build: true
+        
+    # Build project using CMake on Windows
+    - name: Build Project on Windows
+      if: matrix.os == 'windows-latest'
+      uses: threeal/cmake-action@v2.1.0
+      with:
+        generator: Ninja
+        cxx-compiler: ${{ matrix.cpp_compiler }}
+        c-compiler: ${{ matrix.c_compiler }}
+        args: -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\dist
         run-build: true
 
-    - name: Install on local Host
+    # Install on Linux
+    - name: Install on Linux
+      if: matrix.os == 'ubuntu-latest'
       shell: bash
-      run: cmake --install $BUILD_DIRECTORY
+      run: cmake --install ${{ github.workspace }}/build
 
-    # Publish build artifacts
-    - name: Publish build artifacts
+    # Install on MacOS
+    - name: Install on MacOS
+      if: matrix.os == 'macOS-latest'
+      shell: bash
+      run: cmake --install ${{ github.workspace }}/build
+
+    # Install on Windows
+    - name: Install on Windows
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: cmake --install ${{ github.workspace }}\build
+
+    # Publish build artifacts on Linux
+    - name: Publish build artifacts on Linux
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4.6.2
       with:
         name: ${{ matrix.os }}_${{ matrix.c_compiler }}
-        path: $DIST_DIRECTORY
+        path: ${{ github.workspace }}/dist
+        retention-days: 7
+        
+    # Publish build artifacts on MacOS
+    - name: Publish build artifacts on MacOS
+      if: matrix.os == 'macOS-latest'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: ${{ matrix.os }}_${{ matrix.c_compiler }}
+        path: ${{ github.workspace }}/dist
+        retention-days: 7
+        
+    # Publish build artifacts on Windows
+    - name: Publish build artifacts on Windows
+      if: matrix.os == 'Windows'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: ${{ matrix.os }}_${{ matrix.c_compiler }}
+        path: ${{ github.workspace }}\dist
         retention-days: 7
           
     
