@@ -138,7 +138,7 @@ jobs:
       run: |
         REPO=$WORKSPACE_DIRECTORY
         MODIFIED_WORKSPACE_DIRECTORY="${REPO//\//}"
-        echo $MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
+        echo MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
         
     - name: Modify directory separator on Linux
@@ -147,7 +147,7 @@ jobs:
       run: |
         REPO=$WORKSPACE_DIRECTORY
         MODIFIED_WORKSPACE_DIRECTORY=$REPO
-        echo $MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
+        echo MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
  
     - name: Modify directory separator on MacOS
       if: matrix.os == 'macOS-latest'
@@ -155,7 +155,7 @@ jobs:
       run: |
         REPO=$WORKSPACE_DIRECTORY
         MODIFIED_WORKSPACE_DIRECTORY=$REPO
-        echo $MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
+        echo MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
 
     - name: Modified directory
       shell: bash
