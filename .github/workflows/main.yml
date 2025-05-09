@@ -1,0 +1,156 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: CMake C++/Qt on multiple platforms
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  BUILD_DIRECTORY: ${{ github.workspace }}/build
+  DIST_DIRECTORY: ${{ github.workspace }}/dist"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+      # Set up a matrix to run the following 3 configurations:
+      # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
+      # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
+      # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
+      #
+      # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        build_type: [Release]
+        c_compiler: [gcc, clang, cl]
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+          - os: macOS-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+        exclude:
+          - os: windows-latest
+            c_compiler: gcc
+          - os: windows-latest
+            c_compiler: clang
+          - os: ubuntu-latest
+            c_compiler: cl
+          - os: macOS-latest
+            c_compiler: cl
+          - os: macOS-latest
+            c_compiler: gcc
+
+    steps:
+
+    # Initialize submodules recursivelly
+    - uses: actions/checkout@v4
+    - name: Recursivelly initialize .git submodules
+      run: git submodule update --init --recursive
+
+    # Update submodules recursivelly 
+    - name: Recursivelly update and sync .git submodules
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.TOKEN }}
+        run:  git submodule sync
+        submodules: recursive
+
+    # Configure build system for Linux, Windows and MacOS:
+    # 1. Install Ninja build system using appropriate package manager for each platform
+    # 2. Install Qt using aqt of appropriate version for each platform
+    # 3. Configure CMake
+    #  3.1 Setup Ninja as CMake generator
+    #  3.2 Configure MVSC tools for Windows platform
+
+    # Configure build system on Linux
+    - name: Install Ninja on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt install ninja-build
+      
+    - name: Install Qt on Linux
+      if: matrix.os == 'ubuntu-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.5.3'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'gcc_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+    # Configure build system on Windows
+    - name: Install Ninja on Windows
+      if: matrix.os == 'windows-latest'
+      run: choco install ninja
+    
+    - name: Install Qt on Windows
+      if: matrix.os == 'windows-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.8.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+    - name: Configure MVSC tools for Windows
+      if: matrix.os == 'windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    # Configure build system on macOS
+    - name: Install Ninja on macOS
+      if: matrix.os == 'macOS-latest'
+      run: brew install ninja
+    
+    - name: Install Qt on macOS
+      if: matrix.os == 'macOS-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.7.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+      # Setup Ninja as CMake generator
+    - name: Setup Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v5
+
+    # Build project using CMake
+    - name: Build Project
+      uses: threeal/cmake-action@v2.1.0
+      with:
+        generator: Ninja
+        cxx-compiler: ${{ matrix.cpp_compiler }}
+        c-compiler: ${{ matrix.c_compiler }}
+        args: -DCMAKE_INSTALL_PREFIX=$DIST_DIRECTORY
+        run-build: true
+
+    - name: Install on local Host
+      shell: bash
+      run: cmake --install $BUILD_DIRECTORY
+
+    # Publish build artifacts
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: ${{ matrix.os }}_${{ matrix.c_compiler }}
+        path: $DIST_DIRECTORY
+        retention-days: 7
+          
+    
