@@ -3,6 +3,7 @@
 name: CMake C++/Qt on multiple platforms
 
 on:
+  pull_request:
   workflow_dispatch:
 
 env:
@@ -131,13 +132,13 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v5
 
     # modify workspace directory
-    #- name: Modify directory separator on Windows
-    #  if: matrix.os == 'windows-latest'
-    #  shell: bash
-    #  run: |
-    #    REPO=$WORKSPACE_DIRECTORY
-    #    WORKSPACE_DIRECTORY="${REPO//\//}"
-    #    echo $WORKSPACE_DIRECTORY
+    - name: Modify directory separator on Windows
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: |
+        REPO=$WORKSPACE_DIRECTORY
+        WORKSPACE_DIRECTORY="${REPO//\//}"
+        echo $WORKSPACE_DIRECTORY
 
     # Build project using CMake
     - name: Build Project
