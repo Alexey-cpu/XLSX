@@ -139,6 +139,7 @@ jobs:
         REPO=$WORKSPACE_DIRECTORY
         MODIFIED_WORKSPACE_DIRECTORY="${REPO//\//}"
         echo $MODIFIED_WORKSPACE_DIRECTORY >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
         
     - name: Modify directory separator on Linux
       if: matrix.os == 'ubuntu-latest'
