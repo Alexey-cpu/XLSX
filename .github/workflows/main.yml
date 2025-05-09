@@ -131,7 +131,7 @@ jobs:
       uses: seanmiddleditch/gha-setup-ninja@v5
 
     # modify workspace directory
-    - name: Modify directry separator on Windows
+    - name: TEST
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
