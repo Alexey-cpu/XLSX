@@ -55,7 +55,7 @@ bool OpenXLSXWorkBookModel::insertRows(int row, int count, const QModelIndex &pa
     emit layoutAboutToBeChanged();
 
     // append sheets at the end
-    beginInsertRows(parent, row, row + count);
+    beginInsertRows(parent, row, row + count - 1);
 
     if(!m_Documnet->WorkBook()->insertSheets(row, count))
         return false;
@@ -74,7 +74,7 @@ bool OpenXLSXWorkBookModel::removeRows(int row, int count, const QModelIndex &pa
 
     emit layoutAboutToBeChanged();
 
-    beginRemoveRows(parent, row, row + count);
+    beginRemoveRows(parent, row, row + count - 1);
 
     if(!m_Documnet->WorkBook()->removeSheets(row, count))
         return false;

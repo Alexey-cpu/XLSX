@@ -89,7 +89,7 @@ bool XLSX::XLNT::Worksheet::setIndex(int _Index)
 {
     try
     {
-        m_Sheet.workbook().index(m_Sheet, _Index);
+        m_Sheet.workbook().move_sheet(m_Sheet, _Index);
 
         return true;
     }

@@ -101,7 +101,7 @@ bool OpenXLSXSheetModel::insertRows(int row, int count, const QModelIndex &paren
     if(row > rowCount())
         row = rowCount();
 
-    beginInsertRows(parent, row, row + count);
+    beginInsertRows(parent, row, row + count - 1);
 
     if(!m_Sheet->insertRows(row, count))
         return false;
@@ -121,7 +121,7 @@ bool OpenXLSXSheetModel::insertColumns(int column, int count, const QModelIndex 
         column = columnCount();
 
     // append columns to the end
-    beginInsertColumns(parent, column, column + count);
+    beginInsertColumns(parent, column, column + count - 1);
 
     if(!m_Sheet->insertColumns(column, count))
         return false;
@@ -143,7 +143,7 @@ bool OpenXLSXSheetModel::moveRows(const QModelIndex &sourceParent, int from, int
     if (from + 1 == to)
         std::swap(from, to);
 
-    if(!beginMoveRows(QModelIndex(), from, from + count, QModelIndex(), to))
+    if(!beginMoveRows(QModelIndex(), from, from + count - 1, QModelIndex(), to))
         return false;
 
     // retrieve source values
@@ -167,7 +167,7 @@ bool OpenXLSXSheetModel::moveColumns(const QModelIndex &sourceParent, int from, 
     if(from + 1 == to)
         std::swap(from, to);
 
-    if(!beginMoveColumns(QModelIndex(), from, from + count, QModelIndex(), to))
+    if(!beginMoveColumns(QModelIndex(), from, from + count - 1, QModelIndex(), to))
         return false;
 
     if(!m_Sheet->moveColumns(from, count, to))

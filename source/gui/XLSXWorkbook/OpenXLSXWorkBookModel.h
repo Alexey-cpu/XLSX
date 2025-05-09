@@ -35,7 +35,7 @@ public:
 protected:
 
     // info
-    std::shared_ptr<XLSX::IDocument> m_Documnet = std::shared_ptr<XLSX::IDocument>(new XLSX::XLNT::Document());
+    std::shared_ptr<XLSX::IDocument> m_Documnet = std::shared_ptr<XLSX::IDocument>(new XLSX::OpenXLSX::Document());
     std::mt19937_64 m_PseudoRandomNumberGenerator;
 };
 
