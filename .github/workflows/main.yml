@@ -163,19 +163,19 @@ jobs:
         generator: Ninja
         cxx-compiler: ${{ matrix.cpp_compiler }}
         c-compiler: ${{ matrix.c_compiler }}
-        args: -DCMAKE_INSTALL_PREFIX=${{ MODIFIED_WORKSPACE_DIRECTORY }}/dist
+        args: -DCMAKE_INSTALL_PREFIX=${{ env.MODIFIED_WORKSPACE_DIRECTORY }}/dist
         run-build: true
 
     - name: Install on local Host
       shell: bash
-      run: cmake --install ${{ MODIFIED_WORKSPACE_DIRECTORY }}/build
+      run: cmake --install ${{ env.MODIFIED_WORKSPACE_DIRECTORY }}/build
 
     # Publish build artifacts
     - name: Publish build artifacts
       uses: actions/upload-artifact@v4.6.2
       with:
         name: ${{ matrix.os }}_${{ matrix.c_compiler }}
-        path: ${{ MODIFIED_WORKSPACE_DIRECTORY }}/dist
+        path: ${{ env.MODIFIED_WORKSPACE_DIRECTORY }}/dist
         retention-days: 7
           
     
