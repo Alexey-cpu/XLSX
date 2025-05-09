@@ -57,6 +57,81 @@ jobs:
 
     steps:
 
+    # Initialize submodules recursivelly
+    - uses: actions/checkout@v4
+    - name: Recursivelly initialize .git submodules
+      run: git submodule update --init --recursive
+
+    # Update submodules recursivelly 
+    - name: Recursivelly update and sync .git submodules
+      uses: actions/checkout@v4
+      with:
+        run:  git submodule sync
+        submodules: recursive
+
+    # Configure build system for Linux, Windows and MacOS:
+    # 1. Install Ninja build system using appropriate package manager for each platform
+    # 2. Install Qt using aqt of appropriate version for each platform
+    # 3. Configure CMake
+    #  3.1 Setup Ninja as CMake generator
+    #  3.2 Configure MVSC tools for Windows platform
+
+    # Configure build system on Linux
+    - name: Install Ninja on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt install ninja-build
+      
+    - name: Install Qt on Linux
+      if: matrix.os == 'ubuntu-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.5.3'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'gcc_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+    # Configure build system on Windows
+    - name: Install Ninja on Windows
+      if: matrix.os == 'windows-latest'
+      run: choco install ninja
+    
+    - name: Install Qt on Windows
+      if: matrix.os == 'windows-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.8.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+    - name: Configure MVSC tools for Windows
+      if: matrix.os == 'windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    # Configure build system on macOS
+    - name: Install Ninja on macOS
+      if: matrix.os == 'macOS-latest'
+      run: brew install ninja
+    
+    - name: Install Qt on macOS
+      if: matrix.os == 'macOS-latest'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.7.3'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qtcharts qtpdf qtwebengine'
+
+      # Setup Ninja as CMake generator
+    - name: Setup Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v5
+
     # modify workspace directory
     - name: Modify directory separator on Windows
       if: matrix.os == 'windows-latest'
@@ -76,5 +151,31 @@ jobs:
     - name: Modified directory
       shell: bash
       run: echo $MODIFIED_WORKSPACE_DIRECTORY
+
+    - name: Modified directory
+      shell: bash
+      run: echo $MODIFIED_WORKSPACE_DIRECTORY
+
+    # Build project using CMake
+    - name: Build Project
+      uses: threeal/cmake-action@v2.1.0
+      with:
+        generator: Ninja
+        cxx-compiler: ${{ matrix.cpp_compiler }}
+        c-compiler: ${{ matrix.c_compiler }}
+        args: -DCMAKE_INSTALL_PREFIX=$MODIFIED_WORKSPACE_DIRECTORY/dist
+        run-build: true
+
+    - name: Install on local Host
+      shell: bash
+      run: cmake --install $MODIFIED_WORKSPACE_DIRECTORY/build
+
+    # Publish build artifacts
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: ${{ matrix.os }}_${{ matrix.c_compiler }}
+        path: $MODIFIED_WORKSPACE_DIRECTORY/dist
+        retention-days: 7
           
     
