@@ -7,6 +7,7 @@ on:
 
 env:
   WORKSPACE_DIRECTORY: ${{ github.workspace }}
+  WORKSPACE_DIRECTORY_REF: ${{ github.workspace }}
   #BUILD_DIRECTORY: ${{ github.workspace }}/build
   #DIST_DIRECTORY: ${{ github.workspace }}/dist"
 
@@ -134,10 +135,7 @@ jobs:
     - name: TEST
       if: matrix.os == 'windows-latest'
       shell: bash
-      run: |
-        REPO=$WORKSPACE_DIRECTORY
-        WORKSPACE_DIRECTORY="${REPO//\//}"
-        echo $WORKSPACE_DIRECTORY
+      run: echo "CACHE_KEY=${WORKSPACE_DIRECTORY_REF//-/_}" >> $WORKSPACE_DIRECTORY
 
     # Build project using CMake
     - name: Build Project
