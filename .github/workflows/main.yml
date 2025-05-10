@@ -163,7 +163,7 @@ jobs:
         generator: Ninja
         cxx-compiler: ${{ matrix.cpp_compiler }}
         c-compiler: ${{ matrix.c_compiler }}
-        args: -DCMAKE_INSTALL_PREFIX=${{ env.MODIFIED_WORKSPACE_DIRECTORY }}/dist
+        args: -DCMAKE_INSTALL_PREFIX=${{ env.MODIFIED_WORKSPACE_DIRECTORY }}/dist -DCMAKE_BUILD_TYPE=Release
         run-build: true
 
     - name: Install on local Host
